@@ -12,12 +12,12 @@ export default function Home() {
 	]);
 
 	const [pickOrder, setPickOrder] = useState({
-		'1': '',
-		'2': '',
-		'3': '',
-		'4': '',
-		'5': '',
-		'6': '',
+		1: '',
+		2: '',
+		3: '',
+		4: '',
+		5: '',
+		6: '',
 	});
 
 	const [pickNumber, setPickNumber] = useState(1);
