@@ -1,16 +1,16 @@
 'use client';
 import { useState } from 'react';
 
-export default function Home() {
-	const [managerList, setManagerList] = useState([
-		{ name: 'Nick', weight: 36 },
-		{ name: 'George', weight: 25 },
-		{ name: 'Michael', weight: 15 },
-		{ name: 'Sasha', weight: 10 },
-		{ name: 'Neel', weight: 8 },
-		{ name: 'Andrew', weight: 6 },
-	]);
+const managerList = [
+	{ name: 'Nick', weight: 360 },
+	{ name: 'George', weight: 250 },
+	{ name: 'Michael', weight: 150 },
+	{ name: 'Sasha', weight: 100 },
+	{ name: 'Neel', weight: 80 },
+	{ name: 'Andrew', weight: 60 },
+];
 
+export default function Home() {
 	const [pickOrder, setPickOrder] = useState({
 		1: '',
 		2: '',
@@ -21,6 +21,8 @@ export default function Home() {
 	});
 
 	const [pickNumber, setPickNumber] = useState(1);
+
+	const [drawnUsers, setDrawnUsers] = useState([]);
 
 	// Function to perform a weighted random draw
 	function weightedRandomDraw(managerList: { name: string; weight: number }[]) {
@@ -42,19 +44,18 @@ export default function Home() {
 
 	// Function to perform the weighted random draw until all users are selected
 	function drawAllUsers(managerList: { name: string; weight: number }[]) {
-		let remainingManagers = [...managerList];
-
-		if (remainingManagers.length > 0) {
-			let selectedUser = weightedRandomDraw(remainingManagers);
-			remainingManagers = remainingManagers.filter(
-				(user) => user.name !== selectedUser
-			);
-			setManagerList(remainingManagers);
-
-			return selectedUser;
+		let selectedUser = weightedRandomDraw(managerList);
+		while (drawnUsers.includes(selectedUser)) {
+			console.log('manager already drawn');
+			selectedUser = weightedRandomDraw(managerList);
 		}
 
-		return null;
+		setDrawnUsers((prevDrawnUsers) => {
+			const updatedDrawnUsers = [...prevDrawnUsers, selectedUser];
+			return updatedDrawnUsers;
+		});
+
+		return selectedUser;
 	}
 
 	function handleClick() {
@@ -74,6 +75,7 @@ export default function Home() {
 			<h1 className="text-xl font-bold">Fantasy Draft Order</h1>
 
 			<button
+				disabled={pickNumber > 6}
 				onClick={handleClick}
 				className="bg-indigo-500 rounded-full border-2 p-4 text-white"
 			>
